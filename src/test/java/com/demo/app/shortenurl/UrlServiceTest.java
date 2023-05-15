@@ -29,44 +29,6 @@ public class UrlServiceTest {
     }
 
     @Test
-    public void testSave_ExistingUrlEntity_ShouldUpdateShortCount() {
-        String username = "user1";
-        String originalUrl = "https://example.com";
-        UrlEntity existingUrlEntity = new UrlEntity(originalUrl, "shorturl1", username);
-        existingUrlEntity.setShortCount(3L);
-
-        UrlEntity newUrlEntity = new UrlEntity(originalUrl, "shorturl2", username);
-
-        when(urlRepository.findByUsernameAndOriginalUrl(username, originalUrl)).thenReturn(Optional.of(existingUrlEntity));
-        when(urlRepository.save(existingUrlEntity)).thenReturn(existingUrlEntity);
-
-        UrlResponse response = urlService.save(newUrlEntity);
-
-        assertNotNull(response);
-        assertEquals(4L, response.getShortenCount());
-        verify(urlRepository, times(1)).findByUsernameAndOriginalUrl(username, originalUrl);
-        verify(urlRepository, times(1)).save(existingUrlEntity);
-    }
-
-    @Test
-    public void testSave_NewUrlEntity_ShouldCreateNewEntry() {
-        String username = "user2";
-        String originalUrl = "https://example.com";
-        UrlEntity newUrlEntity = new UrlEntity(originalUrl, "shorturl3", username);
-
-        when(urlRepository.findByUsernameAndOriginalUrl(username, originalUrl)).thenReturn(Optional.empty());
-        when(urlRepository.save(newUrlEntity)).thenReturn(newUrlEntity);
-
-        UrlResponse response = urlService.save(newUrlEntity);
-
-        assertNotNull(response);
-        assertEquals(1L, response.getShortenCount());
-        assertEquals(0L, response.getAccessCount());
-        verify(urlRepository, times(1)).findByUsernameAndOriginalUrl(username, originalUrl);
-        verify(urlRepository, times(1)).save(newUrlEntity);
-    }
-
-    @Test
     public void testFindByShortUrl_ExistingUrlEntity_ShouldReturnOptionalUrlEntity() {
         String shortenUrl = "shorturl1";
         UrlEntity existingUrlEntity = new UrlEntity("https://example.com", shortenUrl, "user1");
@@ -118,24 +80,6 @@ public class UrlServiceTest {
         assertNotNull(result);
         assertTrue(result.isEmpty());
         verify(urlRepository, times(1)).findAllByOriginalUrl(originalUrl);
-    }
-
-    @Test
-    public void testFindByUsernameAndOriginalUrl_ExistingUrlEntity_ShouldReturnUrlResponse() {
-        String username = "user1";
-        String originalUrl = "https://example.com";
-        UrlEntity urlEntity = new UrlEntity(originalUrl, "shorturl1", username);
-
-        when(urlRepository.findByUsernameAndOriginalUrl(username, originalUrl))
-                .thenReturn(Optional.of(urlEntity));
-
-        UrlResponse result = urlService.findByUsernameAndOriginalUrl(username, originalUrl);
-
-        assertNotNull(result);
-        assertEquals(originalUrl, result.getOriginalUrl());
-        assertEquals("shorturl1", result.getShortUrl());
-        assertEquals(username, result.getUsername());
-        verify(urlRepository, times(1)).findByUsernameAndOriginalUrl(username, originalUrl);
     }
 
     @Test

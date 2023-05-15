@@ -13,8 +13,12 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class UrlResponse {
     private String originalUrl;
+
     private String shortUrl;
+
     private Long shortenCount;
+
     private Long accessCount;
+
     private String username;
 }

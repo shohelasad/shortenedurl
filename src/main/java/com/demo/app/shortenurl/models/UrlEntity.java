@@ -19,10 +19,15 @@ public class UrlEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String originalUrl;
+
     private String shortenUrl;
+
     private Long shortCount;
+
     private Long accessCount;
+
     private String username;
 
     public UrlEntity(String originalUrl, String shortenUrl, String username) {
